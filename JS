@@ -1,0 +1,244 @@
+const ingredientDatabase = {
+    // Увлажнители и безопасные компоненты
+    "вода": { name: "Вода (основа)", function: "Растворитель, основа средства", safety: "safe", details: "Основной компонент большинства косметических средств." },
+    "глицерин": { name: "Глицерин", function: "Увлажнитель, смягчитель", safety: "safe", details: "Отличный увлажняющий компонент, притягивает воду к коже." },
+    "ниацинамид": { name: "Ниацинамид (Витамин B3)", function: "Антиоксидант, улучшает текстуру кожи", safety: "safe", details: "Снижает воспаление, улучшает барьерную функцию, уменьшает гиперпигментацию." },
+    "гиалуроновая кислота": { name: "Гиалуроновая кислота", function: "Интенсивное увлажнение", safety: "safe", details: "Удерживает влагу, заполняет морщины, не вызывает раздражения." },
+    "гиалуронат натрия": { name: "Гиалуронат натрия", function: "Увлажнение, Омолаживающее средство", safety: "safe", details: "Производное гиалуроновой кислоты с лучшей проникающей способностью." },
+    "пантенол": { name: "Пантенол (Витамин B5)", function: "Увлажнение, заживление", safety: "safe", details: "Превращается в пантотеновую кислоту, успокаивает и восстанавливает кожу." },
+    
+    // Активные компоненты
+    "ретинол": { name: "Ретинол", function: "Омолаживающее средство, обновление кожи", safety: "caution", details: "Золотой стандарт anti-age. Может вызывать раздражение, требует акклиматизации." },
+    "витамин c": { name: "Витамин C", function: "Антиоксидант, осветление", safety: "safe", details: "Защищает от свободных радикалов, осветляет пигментацию. Нестабилен в чистом виде." },
+    "салициловая кислота": { name: "Салициловая кислота", function: "Отшелушивающее, противовоспалительное", safety: "caution", details: "BHA кислота, проникает в поры, эффективна против акне." },
+    "гликолевая кислота": { name: "Гликолевая кислота", function: "Химическое отшелушивание", safety: "caution", details: "AHA кислота, отшелушивает поверхностный слой, улучшает текстуру." },
+    
+    // Консерванты
+    "феноксиэтанол": { name: "Феноксиэтанол", function: "Консервант", safety: "safe", details: "Один из самых безопасных консервантов, разрешен в органической косметике." },
+    "бензиловый спирт": { name: "Бензиловый спирт", function: "Консервант, растворитель", safety: "caution", details: "Может вызывать раздражение у чувствительной кожи." },
+    "парабены": { name: "Парабены", function: "Консерванты", safety: "caution", details: "Эффективные консерванты с противоречивой репутацией. В низких концентрациях считаются безопасными." },
+    
+    // Потенциальные раздражители
+    "денатурированный спирт": { name: "Денатурированный спирт", function: "Растворитель, быстрое высыхание", safety: "avoid", details: "Может сушить и раздражать кожу, нарушать барьерную функцию." },
+    "спирт": { name: "Спирт", function: "Растворитель", safety: "avoid", details: "Высушивает кожу, может вызывать раздражение." },
+    "денатурат спирта": { name: "Денатурированный спирт", function: "Растворитель, быстрое высыхание", safety: "avoid", details: "Может сушить и раздражать кожу, нарушать барьерную функцию." },
+    "отдушка": { name: "Отдушка", function: "Ароматизатор", safety: "avoid", details: "Частый аллерген, может вызывать раздражение, особенно у чувствительной кожи." },
+    "парфюм": { name: "Парфюм", function: "Ароматизатор", safety: "avoid", details: "Синтетическая отдушка, потенциальный аллерген." },
+    "парфюмированная вода": { name: "Парфюмированная вода", function: "Ароматизатор", safety: "avoid", details: "Синтетическая отдушка, потенциальный аллерген." },
+    "эфирные масла": { name: "Эфирные масла", function: "Ароматизатор, активные компоненты", safety: "caution", details: "Натуральные, но могут быть сильными аллергенами и раздражителями." },
+    
+    // Эмоленты и текстурообразователи
+    "диметикон": { name: "Диметикон", function: "Силикон, разглаживатель", safety: "safe", details: "Создает защитную пленку, разглаживает кожу, не комедогенный." },
+    "циклометикон": { name: "Циклометикон", function: "Легкий силикон", safety: "safe", details: "Испаряющийся силикон, придает приятную текстуру, не оставляет жирности." },
+    "цетеариловый спирт": { name: "Цетеариловый спирт", function: "Эмолент, загуститель", safety: "safe", details: "Жирный спирт, не сушит кожу, улучшает текстуру средства." },
+    "бутиленгликоль": { name: "Бутиленгликоль", function: "Увлажнитель, растворитель", safety: "safe", details: "Безопасный увлажнитель и растворитель активных компонентов." }
+};
+
+        function analyzeIngredients() {
+            const input = document.getElementById('ingredientsInput').value.trim();
+            const resultContainer = document.getElementById('resultContainer');
+            const ingredientList = document.getElementById('ingredientList');
+            const scoreElement = document.getElementById('score');
+            
+            if (!input) {
+                resultContainer.innerHTML = '<p style="color: #8721E8; text-align: center;">Пожалуйста, введите состав для анализа</p>';
+                ingredientList.innerHTML = '';
+                scoreElement.textContent = 'Оценка: -';
+                return;
+            }
+            
+            // Очистка предыдущих результатов
+            ingredientList.innerHTML = '';
+            
+            // Разделение ингредиентов
+            const ingredients = input.split(',').map(ing => ing.trim().toLowerCase());
+            
+            // Подсчет статистики
+            let safeCount = 0;
+            let cautionCount = 0;
+            let avoidCount = 0;
+            let unknownCount = 0;
+            
+            // Анализ каждого ингредиента
+            ingredients.forEach((ingredient, index) => {
+                // Поиск в базе данных (прямое совпадение или частичное)
+                let ingredientData = null;
+                let matchedKey = '';
+                
+                // Проверка точного совпадения
+                if (ingredientDatabase[ingredient]) {
+                    ingredientData = ingredientDatabase[ingredient];
+                    matchedKey = ingredient;
+                } else {
+                    // Поиск по частичному совпадению
+                    for (const key in ingredientDatabase) {
+                        if (ingredient.includes(key) || key.includes(ingredient)) {
+                            ingredientData = ingredientDatabase[key];
+                            matchedKey = key;
+                            break;
+                        }
+                    }
+                }
+                
+                // Создание элемента для ингредиента
+                const ingredientItem = document.createElement('div');
+                ingredientItem.className = 'ingredient-item';
+                
+                if (ingredientData) {
+                    // Добавление класса безопасности
+                    ingredientItem.classList.add(ingredientData.safety);
+                    
+                    // Обновление счетчиков
+                    if (ingredientData.safety === 'safe') safeCount++;
+                    else if (ingredientData.safety === 'caution') cautionCount++;
+                    else if (ingredientData.safety === 'avoid') avoidCount++;
+                    
+                    // Создание значка безопасности
+                    let safetyBadge = '';
+                    let safetyText = '';
+                    
+                    if (ingredientData.safety === 'safe') {
+                        safetyBadge = '<span class="badge safe">Безопасно</span>';
+                        safetyText = 'Безопасный компонент';
+                    } else if (ingredientData.safety === 'caution') {
+                        safetyBadge = '<span class="badge caution">С осторожностью</span>';
+                        safetyText = 'Требует осторожности, может вызывать реакции';
+                    } else if (ingredientData.safety === 'avoid') {
+                        safetyBadge = '<span class="badge avoid">Избегать</span>';
+                        safetyText = 'Потенциально проблемный компонент';
+                    }
+                    
+                    // Порядковый номер в составе (первые компоненты важнее)
+                    const position = index + 1;
+                    let positionBadge = '';
+                    if (position <= 5) {
+                        positionBadge = `<span class="badge" style="background-color: #6a11cb; color: white;">Основной компонент (№${position})</span>`;
+                    }
+                    
+                    ingredientItem.innerHTML = `
+                        <div class="ingredient-header">
+                            <div class="ingredient-name">${ingredientData.name}</div>
+                            <div>${safetyBadge} ${positionBadge}</div>
+                        </div>
+                        <div class="ingredient-function"><strong>Функция:</strong> ${ingredientData.function}</div>
+                        <div class="ingredient-details">
+                            <strong>Описание:</strong> ${ingredientData.details}
+                        </div>
+                        <div class="ingredient-details">
+                            <small><strong>СИКС:</strong> ${ingredient}</small>
+                        </div>
+                    `;
+                } else {
+                    // Неизвестный ингредиент
+                    unknownCount++;
+                    ingredientItem.innerHTML = `
+                        <div class="ingredient-header">
+                            <div class="ingredient-name">${ingredient}</div>
+                            <span class="badge" style="background-color: #999; color: white;">Неизвестно</span>
+                        </div>
+                        <div class="ingredient-details">
+                            <strong>Информация:</strong> Этот ингредиент не найден в базе данных. Проверьте правильность написания или обратитесь к специализированным ресурсам.
+                        </div>
+                    `;
+                }
+                
+                ingredientList.appendChild(ingredientItem);
+            });
+            
+            // Расчет общей оценки
+            const totalKnown = safeCount + cautionCount + avoidCount;
+            let score = 0;
+            let scoreText = '';
+            let scoreColor = '';
+            
+            if (totalKnown > 0) {
+                score = Math.round((safeCount / totalKnown) * 100);
+                
+                if (score >= 80) {
+                    scoreText = 'Отличный состав';
+                    scoreColor = '#28a745';
+                } else if (score >= 60) {
+                    scoreText = 'Хороший состав';
+                    scoreColor = '#ffc107';
+                } else {
+                    scoreText = 'Требует внимания';
+                    scoreColor = '#dc3545';
+                }
+                
+                scoreElement.innerHTML = `Оценка: <span style="color: ${scoreColor}">${score}% - ${scoreText}</span>`;
+            } else {
+                scoreElement.textContent = 'Оценка: Недостаточно данных';
+            }
+            
+            // Отображение статистики
+            resultContainer.innerHTML = `
+                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3>Статистика анализа</h3>
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 15px;">
+                        <div style="text-align: center; flex: 1; min-width: 150px;">
+                            <div style="font-size: 2.5rem; color: #28a745; font-weight: bold;">${safeCount}</div>
+                            <div>Безопасные</div>
+                        </div>
+                        <div style="text-align: center; flex: 1; min-width: 150px;">
+                            <div style="font-size: 2.5rem; color: #ffc107; font-weight: bold;">${cautionCount}</div>
+                            <div>С осторожностью</div>
+                        </div>
+                        <div style="text-align: center; flex: 1; min-width: 150px;">
+                            <div style="font-size: 2.5rem; color: #dc3545; font-weight: bold;">${avoidCount}</div>
+                            <div>Избегать</div>
+                        </div>
+                        <div style="text-align: center; flex: 1; min-width: 150px;">
+                            <div style="font-size: 2.5rem; color: #6c757d; font-weight: bold;">${unknownCount}</div>
+                            <div>Неизвестно</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        Всего проанализировано ингредиентов: <strong>${ingredients.length}</strong>
+                    </p>
+                </div>
+            `;
+            
+            // Добавление рекомендаций
+            let recommendations = '';
+            
+            if (avoidCount > 0) {
+                recommendations += `<li>Средство содержит ${avoidCount} потенциально проблемных компонента. Рекомендуется провести тест на аллергию.</li>`;
+            }
+            
+            if (cautionCount > 2) {
+                recommendations += `<li>Несколько компонентов требуют осторожности. Убедитесь, что ваша кожа не чувствительна к ним.</li>`;
+            }
+            
+            if (safeCount >= 5 && avoidCount === 0) {
+                recommendations += `<li>Состав выглядит сбалансированным и безопасным для большинства типов кожи.</li>`;
+            }
+            
+            if (unknownCount > ingredients.length / 2) {
+                recommendations += `<li>Много неизвестных компонентов. Рекомендуется проверить состав на специализированных сайтах (INCIDecoder, CosDNA).</li>`;
+            }
+            
+            if (recommendations) {
+                const recommendationsHTML = `
+                    <div class="warning">
+                        <h3>Рекомендации</h3>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            ${recommendations}
+                        </ul>
+                    </div>
+                `;
+                resultContainer.innerHTML += recommendationsHTML;
+            }
+        }
+        
+        function clearAnalysis() {
+            document.getElementById('ingredientsInput').value = '';
+            document.getElementById('resultContainer').innerHTML = '<p style="text-align: center; color: #777; padding: 40px;">Здесь будут отображены результаты анализа ингредиентов...</p>';
+            document.getElementById('ingredientList').innerHTML = '';
+            document.getElementById('score').textContent = 'Оценка: -';
+        }
+        
+        // Добавление примера состава при загрузке
+        window.onload = function() {
+            const example = " Вода, Глицерин, Ниацинамид, Диметикон, Денатурат спирта, Парфюмированная вода, Феноксиэтанол, Гиалуронат натрия ";
+            document.getElementById('ingredientsInput').value = example;
+        };
