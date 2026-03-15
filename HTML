@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализатор состава косметики</title>
+  </head>
+<body>
+    <div class="container">
+        <header>
+            <h1> Анализатор состава косметики</h1>
+            <p class="subtitle">Вставьте список ингредиентов косметического средства для анализа безопасности, функций компонентов и получения рекомендаций</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Введите состав</h2>
+                <div class="example">
+                    <h3>Пример формата:</h3>
+                    <p>Вода, Глицерин, Ниацинамид, Диметикон, Денатурат спирта, Парфюмированная вода, Феноксиэтанол, Гиалуронат натрия</p>
+                </div>
+                
+                <textarea id="ingredientsInput" placeholder="Вставьте список ингредиентов через запятую..."></textarea>
+                
+                <button class="btn" onclick="analyzeIngredients()">Проанализировать состав</button>
+                <button class="btn" onclick="clearAnalysis()" style="background: linear-gradient(to right, #757575 0%, #9e9e9e 100%);"> Очистить</button>
+                
+                <div class="warning">
+                    <strong>ВНИМАНИЕ!:</strong> Этот инструмент предназначен для образовательных целей. Для профессиональной оценки косметики обратитесь к дерматологу.
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-header">
+                    <h2>Результаты анализа</h2>
+                    <div id="score" class="score">Оценка: -</div>
+                </div>
+                
+                <div id="resultContainer">
+                    <p style="text-align: center; color: #777; padding: 40px;">
+                        Здесь будут отображены результаты анализа ингредиентов...
+                    </p>
+                </div>
+    	 <div id="ingredientList" class="ingredient-list">
+                </div>
+            </div>
+        </div>
+		<footer>
+             </footer>
+        </div>
+</body>
+</html>
+  
